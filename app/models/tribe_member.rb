@@ -1,0 +1,2 @@
+class TribeMember < ApplicationRecord
+end
