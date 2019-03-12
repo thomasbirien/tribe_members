@@ -1,3 +1,28 @@
 <h1>Tribe Member Around The World !</h1>
 
+<div id='map' style="width: 600px; height: 400px;"></div>
+
+<script type="text/javascript">
+  var locations = <%=@locations%>;
+
+        var map = L.map('map').setView([locations[0][0], locations[0][1]], 8);
+        mapLink =
+            '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        L.tileLayer(
+            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; ' + mapLink + ' Contributors',
+            maxZoom: 18,
+            }).addTo(map);
+
+    for (var i = 0; i < locations.length; i++) {
+      if (parseFloat([locations[i][0]]) !== null && parseFloat([locations[i][1]]) !== null) {
+
+        marker = new L.marker([locations[i][0],
+                              locations[i][1]]
+                            )
+          .bindPopup(parseFloat([locations[i][0]]))
+          .addTo(map);
+      }
+    }
+</script>
 
