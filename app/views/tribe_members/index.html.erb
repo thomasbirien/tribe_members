@@ -3,26 +3,74 @@
 <div id='map' style="width: 600px; height: 400px;"></div>
 
 <script type="text/javascript">
-  var locations = <%=@locations%>;
+  var locations = <%= @location %>;
 
-        var map = L.map('map').setView([locations[0][0], locations[0][1]], 8);
-        mapLink =
-            '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-        L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; ' + mapLink + ' Contributors',
-            maxZoom: 18,
-            }).addTo(map);
-
-    for (var i = 0; i < locations.length; i++) {
-      if (parseFloat([locations[i][0]]) !== null && parseFloat([locations[i][1]]) !== null) {
-
-        marker = new L.marker([locations[i][0],
-                              locations[i][1]]
-                            )
-          .bindPopup(parseFloat([locations[i][0]]))
-          .addTo(map);
-      }
+  var map = L.map('map').setView([locations[0], locations[1]], 8);
+  mapLink =
+      '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+  L.tileLayer(
+      'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; ' + mapLink + ' Contributors',
+      maxZoom: 18,
+      }).addTo(map);
+  // var geojsonLayer = new L.GeoJSON.AJAX("geo.geojson");
+  function onEachFeature(feature, layer) {
+    // does this feature have a property named popupContent?
+    if (feature.properties && feature.properties.popupContent) {
+        layer.bindPopup(feature.properties.popupContent);
     }
+  }
+
+  $.ajax({
+      type: "get",
+      url: 'geo.geojson',
+      dataType: 'json',
+      success: function (response) {
+
+          L.geoJSON(response, {
+            onEachFeature: onEachFeature
+          }).addTo(map);
+      }
+  });
+
+  var markers = L.markerClusterGroup();
+  markers.addLayer(L.marker(getRandomLatLng(map)));
+
+  // var MemberLayer = new L.GeoJSON.AJAX("geo.geojson", {onEachFeature: onEachFeature}).addTo(map);
+  // L.geoJson(MemberLayer,{onEachFeature: onEachFeature}).addTo(map);
+
+  // function onEachFeature(feature, layer) {
+  //   layer.on({
+  //       mouseover: highlightFeature,
+  //       mouseout: resetHighlight,
+  //       click: zoomToFeature
+  //   });
+  // }
+
+
+  // // HIGHLIGHT FEATURE = MOUSEOVER
+  // function highlightFeature(e) {
+  //     var layer = e.target;
+
+  //     layer.setStyle({
+  //         weight: 5,
+  //         color: '#666',
+  //         dashArray: '',
+  //         fillOpacity: 0.7
+  //     });
+  // };
+
+
+  //   // HIGHLIGHT FEATURE = MOUSE LEFT
+  // function resetHighlight(e) {
+  //       geojson.resetStyle(e.target);
+  //   };
+
+  // // ZOOM TO THE REGION
+  //   function zoomToFeature(e) {
+  //     map.fitBounds(e.target.getBounds());
+  // }
+
+
 </script>
 

@@ -1,5 +1,7 @@
 {
   "name": "tribe_members",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "leaflet.markercluster": "^1.4.1"
+  }
 }
