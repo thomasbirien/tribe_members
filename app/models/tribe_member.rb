@@ -12,24 +12,9 @@ class TribeMember < ApplicationRecord
   end
 
   def self.build_geojson
-    # {  "type": "FeatureCollection",
-    # "features": []
-    # }
-    # TribeMember.all.each do |tm|
-    #   str = '{"type":"Feature","geometry":{"type":"Point","coordinates":["#{tm.latitude.to_f}", "#{tm.longitude.to_f}"]},"properties":{"color":"red"}}'
-
-    # end
-    # str2 = '{"type":"Feature","geometry":{"type":"Point","coordinates":[2.5,4.0]},"properties":{"color":"red"}}'
-    # feature = RGeo::GeoJSON.decode(str2)
-    # feature['color']          # => 'red'
-    # feature.geometry.as_text  # => "POINT (2.5 4.0)"
-
-    # hash = RGeo::GeoJSON.encode(feature)
-    # hash.to_json == str2
-
     geojson = { "type" => "FeatureCollection", "features" => []}
 
-    TribeMember.all.limit(6).each do |tm|
+    TribeMember.all.each do |tm|
       hash = {
         type: 'Feature',
         geometry: {
