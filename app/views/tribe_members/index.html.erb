@@ -84,7 +84,72 @@
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
-
 </script>
+
+
+<h3>Search</h3>
+<p>search by name</p>
+  <%= form_tag(tribe_members_path, method: :get) do %>
+    <%= text_field_tag(:name, params[:name])%>
+    <%= submit_tag("Search")%>
+  <% end %>
+<p>search by surname</p>
+  <%= form_tag(tribe_members_path, method: :get) do %>
+    <%= text_field_tag(:surname, params[:surname])%>
+    <%= submit_tag("Search")%>
+  <% end %>
+<p>search by birthdate</p>
+  <%= form_tag(tribe_members_path, method: :get) do %>
+    <%= date_select("member_birthdate", "birthdate", start_year: 1500, end_year: Date.current.year, order: [:year, :month, :day]) %>
+    <%= submit_tag("Search")%>
+  <% end %>
+<p>search by ancestor</p>
+  <%= form_tag(tribe_members_path, method: :get) do %>
+    <%= text_field_tag(:ancestor_name, params[:ancestor_name])%>
+    <%= submit_tag("Search")%>
+  <% end %>
+
+
+<div>
+  <% if @search_result == "no result" %>
+    <p> No Result for this research</p>
+    <%= link_to 'See all list', tribe_members_path%>
+  <% elsif @search_result.present? %>
+    <ul>
+      <% @search_result[:result].each do |tm| %>
+        <li>
+          <%= "name: #{tm[:member].name}" %>
+          <%= "surname: #{tm[:member].surname}" %>
+          <%= "birthdate: #{tm[:member].birthdate}" %>
+        </li>
+        <%= "ancestor: "%>
+        <li>
+          <%= "id: #{tm[:ancestor].id}" %>
+          <%= "name: #{tm[:ancestor].name}" %>
+          <%= "surname: #{tm[:ancestor].surname}"%>
+        </li>
+      <% end %>
+    </ul>
+    <%= link_to 'See all list', tribe_members_path%>
+  <% else %>
+    <ul>
+      <% @tribe_m["tribe_members"].each do |tm| %>
+        <li>
+          <%= tm["name"]%>
+          <%= tm["surname"]%>
+          <%= tm["birthdate"]%>
+          <%if tm["ancestor"]["id"] != 0%>
+            <p>ancêtre</p>
+            <%= tm["ancestor"]["id"]%>
+            <%= tm["ancestor"]["name"]%>
+            <%= tm["ancestor"]["surname"]%>
+          <% else %>
+
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
 
 

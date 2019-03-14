@@ -1,6 +1,15 @@
 class TribeMembersController < ApplicationController
   def index
-    @tribe_members = TribeMember.all
+    if params[:name].present? || params[:surname] || params[:member_birthdate] || params[:ancestor_name]
+      @search_result = TribeMember.search(params)
+    else
+      @tribe_m = JSON.parse(File.read('public/tribe_members.json'))
+      respond_to do |format|
+        format.html
+        format.json { render json: @tribe_m }
+      end
+    end
+    # @tribe_members = TribeMember.all
     # TribeMember.build_geojson
   end
 
