@@ -133,23 +133,17 @@
     <%= link_to 'See all list', tribe_members_path%>
   <% else %>
     <ul>
-      <% @tribe_m["tribe_members"].each do |tm| %>
+      <% @tribe_m.each do |tm| %>
         <li>
-          <%= tm["name"]%>
-          <%= tm["surname"]%>
-          <%= tm["birthdate"]%>
-          <%if tm["ancestor"]["id"] != 0%>
-            <p>ancêtre</p>
-            <%= tm["ancestor"]["id"]%>
-            <%= tm["ancestor"]["name"]%>
-            <%= tm["ancestor"]["surname"]%>
-          <% else %>
-
-          <% end %>
+          <%= tm.name %>
+          <%= tm.surname %>
+          <%= tm.birthdate %>
         </li>
       <% end %>
     </ul>
   <% end %>
 </div>
+
+<%= will_paginate @tribe_m %>
 
 
