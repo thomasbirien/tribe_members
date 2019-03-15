@@ -31,7 +31,7 @@ class TribeMembersController < ApplicationController
   end
 
   def show_stats
-    @stats = TribeMember.generate_stats
+    @stats = TribeMember.data_parse
   end
 
   private

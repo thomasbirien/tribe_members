@@ -117,7 +117,52 @@ class TribeMember < ApplicationRecord
     geojson
   end
 
-  def generate_stats
+  def self.data_parse
+    data_hash = JSON.parse(File.read('public/data_for_stat.json'))
+    average_age = data_hash["age"].sum / data_hash["age"].count
+    oldest_member = TribeMember.find(data_hash["older"]["id"])
+    data_to_show = {average: average_age, count: data_hash["count"], oldest_member: oldest_member, age_oldest_member: data_hash["older"]["age"]}
+
+  end
+
+  def self.added_member_to_stats
+    # ici quand on a un new member faut ouvrir le json et rajouter 1 au count,on compare le age time et en
+    # fonction on modifie le older et on rajout son age dans le average.
+  end
+
+  def self.generate_stats
+    puts "start"
+    count = 0
+    average = []
+    older = {age: 0, age_time: 0, id: nil}
+    TribeMember.all.each do |tm|
+      puts "#{tm.id}"
+      count += 1
+
+      age_year = ((Time.zone.now - tm.birthdate.to_time) / 1.year.seconds).floor
+      age_time = Time.zone.now - tm.birthdate.to_time
+      # if older[:age] == 0
+      #   older[:age] = age_time
+      # end
+      # next if age_year > 90
+      average << age_year
+      if older[:age_time] < age_time
+        older[:age] = age_year
+        older[:age_time] = age_time
+        older[:id] = tm.id
+      end
+      puts "older: #{older}"
+    end
+    # average_age = average.sum / average.count
+    # puts "average_age: #{average_age}"
+    puts "count: #{count}"
+
+
+    stat_info = {age: average, count: count, older: older}
+    stat_to_save = stat_info.to_json
+    File.open("public/data_for_stat.json","w") do |f|
+      f.write(stat_to_save)
+    end
   end
 
 
