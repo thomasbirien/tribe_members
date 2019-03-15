@@ -15,7 +15,6 @@ class TribeMember < ApplicationRecord
     TribeMember.select{|tm| tm.birthdate == val.to_date}
   }
 
-
   scope :get_ancestor, -> (val) {
     TribeMember.find(val)
   }
@@ -117,6 +116,18 @@ class TribeMember < ApplicationRecord
     geojson
   end
 
+  def self.add_to_geojson(tribe_member)
+    data_hash = JSON.parse(File.read('public/geo.geojson'))
+    hash = {"type"=>"Feature", "geometry"=>{"type"=>"Point", "coordinates"=>[tribe_member.latitude, tribe_member.longitude]}, "properties"=>{"title"=>tribe_member.id}}
+    data_hash["features"] << hash
+
+    geo_to_save = data_hash.to_json
+
+    File.open("public/geo.geojson","w") do |f|
+      f.write(geo_to_save)
+    end
+  end
+
   def self.data_parse
     data_hash = JSON.parse(File.read('public/data_for_stat.json'))
     average_age = data_hash["age"].sum / data_hash["age"].count
@@ -125,9 +136,24 @@ class TribeMember < ApplicationRecord
 
   end
 
-  def self.added_member_to_stats
-    # ici quand on a un new member faut ouvrir le json et rajouter 1 au count,on compare le age time et en
-    # fonction on modifie le older et on rajout son age dans le average.
+  def self.add_to_stats(tribe_member)
+    data_hash = JSON.parse(File.read('public/data_for_stat.json'))
+    age_year = ((Time.zone.now - tribe_member.birthdate.to_time) / 1.year.seconds).floor
+    data_hash["age"] << age_year
+    age_time = Time.zone.now - tribe_member.birthdate.to_time
+    if data_hash["older"]["age_time"] < age_time
+      data_hash["older"]["age_time"] = age_time
+      data_hash["older"]["age"] = age_year
+      data_hash["older"]["id"] = tribe_member.id
+    end
+
+    data_hash["count"] = data_hash["count"] + 1
+    stat_to_save = data_hash.to_json
+
+    File.open("public/data_for_stat.json","w") do |f|
+      f.write(stat_to_save)
+    end
+
   end
 
   def self.generate_stats
