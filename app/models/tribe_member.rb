@@ -1,5 +1,7 @@
 class TribeMember < ApplicationRecord
 
+  belongs_to :ancestor, class_name: "TribeMember", foreign_key: :ancestor
+
   scope :by_name, -> (val) {
     TribeMember.where(name: val)
   }
@@ -12,10 +14,6 @@ class TribeMember < ApplicationRecord
     TribeMember.select{|tm| tm.birthdate == val.to_date}
   }
 
-  scope :by_ancestor_name, -> (val) {
-    ancestor = TribeMember.where(name: val).first
-    TribeMember.where(ancestor: ancestor.id)
-  }
 
   scope :get_ancestor, -> (val) {
     TribeMember.find(val)
@@ -32,12 +30,11 @@ class TribeMember < ApplicationRecord
   end
 
   def self.search(params)
-    search_result = {result: []}
     if params[:name].present?
-      member = TribeMember.by_name(params[:name])
+      search_result = TribeMember.by_name(params[:name])
 
     elsif params[:surname].present?
-      member = TribeMember.by_surname(params[:surname])
+      search_result = TribeMember.by_surname(params[:surname])
 
     elsif params[:member_birthdate].present?
       if params[:member_birthdate]["birthdate(2i)"].to_i < 10
@@ -47,20 +44,15 @@ class TribeMember < ApplicationRecord
        params[:member_birthdate]["birthdate(3i)"] = "0" + params[:member_birthdate]["birthdate(3i)"]
       end
       birthdate = params[:member_birthdate]["birthdate(1i)"] + "-" + params[:member_birthdate]["birthdate(2i)"] + "-" + params[:member_birthdate]["birthdate(3i)"]
-      member = TribeMember.by_birthdate(birthdate)
+      search_result = TribeMember.by_birthdate(birthdate)
 
-    elsif params[:ancestor_name].present?
-      member = TribeMember.by_ancestor_name(params[:ancestor_name])
-    else
-      search_result = "no result"
+    elsif params[:ancestor_name].present? && params[:ancestor_surname].present?
+      ancestor = TribeMember.where(name: params[:ancestor_name], surname: params[:ancestor_surname]).first
+      search_result = TribeMember.where("ancestor = ?", ancestor.id)
     end
 
-    if search_result != "no result"
-      member.each do |m|
-        ancestor = TribeMember.get_ancestor(m.ancestor)
-        hash = {member: m, ancestor: ancestor}
-        search_result[:result] << hash
-      end
+    if search_result == []
+      search_result = "no result"
     end
 
     search_result

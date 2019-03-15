@@ -90,12 +90,12 @@
 <h3>Search</h3>
 <p>search by name</p>
   <%= form_tag(tribe_members_path, method: :get) do %>
-    <%= text_field_tag(:name, params[:name])%>
+    <%= text_field_tag(:name, params[:name], required: true)%>
     <%= submit_tag("Search")%>
   <% end %>
 <p>search by surname</p>
   <%= form_tag(tribe_members_path, method: :get) do %>
-    <%= text_field_tag(:surname, params[:surname])%>
+    <%= text_field_tag(:surname, params[:surname], required: true)%>
     <%= submit_tag("Search")%>
   <% end %>
 <p>search by birthdate</p>
@@ -105,7 +105,8 @@
   <% end %>
 <p>search by ancestor</p>
   <%= form_tag(tribe_members_path, method: :get) do %>
-    <%= text_field_tag(:ancestor_name, params[:ancestor_name])%>
+    <%= text_field_tag(:ancestor_name, params[:ancestor_name], required: true)%>
+    <%= text_field_tag(:ancestor_surname, params[:ancestor_surname], required: true) %>
     <%= submit_tag("Search")%>
   <% end %>
 
@@ -116,17 +117,17 @@
     <%= link_to 'See all list', tribe_members_path%>
   <% elsif @search_result.present? %>
     <ul>
-      <% @search_result[:result].each do |tm| %>
+      <% @search_result.each do |tm| %>
         <li>
-          <%= "name: #{tm[:member].name}" %>
-          <%= "surname: #{tm[:member].surname}" %>
-          <%= "birthdate: #{tm[:member].birthdate}" %>
+          <%= "name: #{tm.name}" %>
+          <%= "surname: #{tm.surname}" %>
+          <%= "birthdate: #{tm.birthdate}" %>
         </li>
         <%= "ancestor: "%>
         <li>
-          <%= "id: #{tm[:ancestor].id}" %>
-          <%= "name: #{tm[:ancestor].name}" %>
-          <%= "surname: #{tm[:ancestor].surname}"%>
+          <%= "id: #{tm.ancestor.id}" %>
+          <%= "name: #{tm.ancestor.name}" %>
+          <%= "surname: #{tm.ancestor.surname}"%>
         </li>
       <% end %>
     </ul>
@@ -138,12 +139,20 @@
           <%= tm.name %>
           <%= tm.surname %>
           <%= tm.birthdate %>
+          <% if tm.ancestor.present? %>
+            <%= "ancestor" %>
+            <%= tm.ancestor.id %>
+            <%= tm.ancestor.name %>
+            <%= tm.ancestor.surname %>
+          <% end %>
         </li>
       <% end %>
     </ul>
   <% end %>
 </div>
 
-<%= will_paginate @tribe_m %>
+<% if @search_result.nil? %>
+  <%= will_paginate @tribe_m %>
+<% end %>
 
 
