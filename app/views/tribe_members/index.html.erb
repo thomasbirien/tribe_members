@@ -1,0 +1,160 @@
+<h1>Tribe Member Around The World !</h1>
+
+
+
+
+<div id="map" style="width: 600px; height: 400px;"></div>
+
+<script>
+  var map = L.map('map').setView([0, 0], 5);
+  $.ajax({
+    type: "get",
+    url: 'geo.geojson',
+    dataType: 'json',
+    success: function (response) {
+
+      // Empty Layer Group that will receive the clusters data on the fly.
+      var markers = L.geoJSON(null, {
+        pointToLayer: createClusterIcon
+      }).addTo(map);
+
+      // Update the displayed clusters after user pan / zoom.
+      map.on('moveend', update);
+
+      function update() {
+        if (!ready) return;
+        var bounds = map.getBounds();
+        var bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
+        var zoom = map.getZoom();
+        var clusters = index.getClusters(bbox, zoom);
+        markers.clearLayers();
+        markers.addData(clusters);
+      }
+
+      // Zoom to expand the cluster clicked by user.
+      markers.on('click', function(e) {
+        var clusterId = e.layer.feature.properties.cluster_id;
+        var center = e.latlng;
+        var expansionZoom;
+        if (clusterId) {
+          expansionZoom = index.getClusterExpansionZoom(clusterId);
+          map.flyTo(center, expansionZoom);
+        }
+      });
+      var geojson = response
+      var index;
+      var ready = false;
+
+
+      // Initialize the supercluster index.
+      index = supercluster({
+        radius: 60,
+        extent: 256,
+        maxZoom: 18
+      }).load(geojson.features); // Expects an array of Features.
+
+      ready = true;
+      update();
+
+
+
+
+
+      function createClusterIcon(feature, latlng) {
+        if (!feature.properties.cluster) return L.marker(latlng);
+
+        var count = feature.properties.point_count;
+        var size =
+          count < 100 ? 'small' :
+          count < 1000 ? 'medium' : 'large';
+        var icon = L.divIcon({
+          html: '<div><span>' + feature.properties.point_count_abbreviated + '</span></div>',
+          className: 'marker-cluster marker-cluster-' + size,
+          iconSize: L.point(40, 40)
+        });
+
+        return L.marker(latlng, {
+          icon: icon
+        });
+      }
+        }
+  });
+
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+</script>
+
+<%= link_to "Add a new member", new_tribe_member_path %>
+
+
+<h3>Search</h3>
+<p>search by name</p>
+  <%= form_tag(tribe_members_path, method: :get) do %>
+    <%= text_field_tag(:name, params[:name], required: true)%>
+    <%= submit_tag("Search")%>
+  <% end %>
+<p>search by surname</p>
+  <%= form_tag(tribe_members_path, method: :get) do %>
+    <%= text_field_tag(:surname, params[:surname], required: true)%>
+    <%= submit_tag("Search")%>
+  <% end %>
+<p>search by birthdate</p>
+  <%= form_tag(tribe_members_path, method: :get) do %>
+    <%= date_select("member_birthdate", "birthdate", start_year: 1500, end_year: Date.current.year, order: [:year, :month, :day]) %>
+    <%= submit_tag("Search")%>
+  <% end %>
+<p>search by ancestor</p>
+  <%= form_tag(tribe_members_path, method: :get) do %>
+    <%= text_field_tag(:ancestor_name, params[:ancestor_name], required: true)%>
+    <%= text_field_tag(:ancestor_surname, params[:ancestor_surname], required: true) %>
+    <%= submit_tag("Search")%>
+  <% end %>
+
+
+<div>
+  <% if @search_result == "no result" %>
+    <p> No Result for this research</p>
+    <%= link_to 'See all list', tribe_members_path%>
+  <% elsif @search_result.present? %>
+    <ul>
+      <% @search_result.each do |tm| %>
+        <li>
+          <%= "name: #{tm.name}" %>
+          <%= "surname: #{tm.surname}" %>
+          <%= "birthdate: #{tm.birthdate}" %>
+        </li>
+        <%= "ancestor: "%>
+        <li>
+          <%= "id: #{tm.ancestor.id}" %>
+          <%= "name: #{tm.ancestor.name}" %>
+          <%= "surname: #{tm.ancestor.surname}"%>
+        </li>
+      <% end %>
+    </ul>
+    <%= link_to 'See all list', tribe_members_path%>
+  <% else %>
+    <ul>
+      <% @tribe_m.each do |tm| %>
+        <li>
+          <%= tm.name %>
+          <%= tm.surname %>
+          <%= tm.birthdate %>
+          <% if tm.ancestor.present? %>
+            <%= "ancestor" %>
+            <%= tm.ancestor.id %>
+            <%= tm.ancestor.name %>
+            <%= tm.ancestor.surname %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+
+<% if @search_result.nil? %>
+  <%= will_paginate @tribe_m %>
+<% end %>
+
+
