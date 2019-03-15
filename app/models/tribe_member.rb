@@ -1,4 +1,5 @@
 class TribeMember < ApplicationRecord
+  attr_accessor :ancestor_name, :ancestor_surname
 
   belongs_to :ancestor, class_name: "TribeMember", foreign_key: :ancestor
 
@@ -107,23 +108,17 @@ class TribeMember < ApplicationRecord
       }
 
       geojson["features"] << hash
+    end
+
+    geojson_json = geojson.to_json
+    File.open("public/geo.geojson","w") do |f|
+      f.write(geojson_json)
+    end
+    geojson
   end
 
-  geojson_json = geojson.to_json
-  File.open("public/geo.geojson","w") do |f|
-    f.write(geojson_json)
+  def generate_stats
   end
 
-  geojson
-
-
-
-     # TribeMember.all.each do |tm|
-     #   str = '{"type":"Feature","geometry":{"type":"Point","coordinates":["#{tm.latitude.to_f}", "#{tm.longitude.to_f}"]},"properties":{"color":"red"}}'
-     #   hash[:features] << str
-     # end
-
-     # hash = hash.to_json
-  end
 
 end

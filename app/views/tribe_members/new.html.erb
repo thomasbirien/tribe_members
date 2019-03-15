@@ -1,0 +1,18 @@
+<h2>Add a new member !</h2>
+<%= form_for @tribe_member, url: tribe_members_path(@tribe_member) do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name%>
+  <%= f.label :surname %>
+  <%= f.text_field :surname%>
+  <%= f.label :birthdate %>
+  <%= f.date_select :birthdate, start_year: 1500, end_year: Date.current.year, order: [:year, :month, :day] %>
+  <%= f.label "Latitude / Longitude" %>
+  <%= f.text_field :latitude %>
+  <%= f.text_field :longitude %>
+  <p>ancestor</p>
+  <%= f.label :ancestor_name %>
+  <%= f.text_field :ancestor_name %>
+  <%= f.label :ancestor_surname %>
+  <%= f.text_field :ancestor_surname %>
+  <%= f.submit %>
+<% end %>
