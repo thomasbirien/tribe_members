@@ -15,7 +15,9 @@ class TribeMembersController < ApplicationController
   end
 
   def new
+    raise
   end
+
 
   def create
   end
