@@ -15,11 +15,29 @@ class TribeMembersController < ApplicationController
   end
 
   def new
-    raise
+    @tribe_member = TribeMember.new
   end
 
 
   def create
+    ancestor = TribeMember.where(name: params[:tribe_member][:ancestor_name], surname: params[:tribe_member][:ancestor_surname]).first
+    @tribe_member = TribeMember.new(tribe_member_params)
+    @tribe_member.ancestor = ancestor
+    if @tribe_member.save
+      redirect_to tribe_members_path
+    else
+      render :new
+    end
+  end
+
+  def show_stats
+    @stats = TribeMember.generate_stats
+  end
+
+  private
+
+  def tribe_member_params
+    params.require(:tribe_member).permit(:name, :surname, :birthdate, :latitude, :longitude)
   end
 
 end
