@@ -1,7 +1,31 @@
-<h3>Stats for your tribe</h3>
-
-<p>Total Member: <%= @stats[:count] %></p>
-<p>Average age: <%= @stats[:average]%></p>
-<p>The oldest member: <%= @stats[:oldest_member].name + ", " + @stats[:oldest_member].surname + ", age: " + @stats[:age_oldest_member].to_s%></p>
-
-<%= link_to "Back", tribe_members_path%>
+<div class="banner">
+  <h2>Stats for your tribe</h2>
+</div>
+<br>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-6 offset-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Total member</th>
+            <th scope="col">Average age</th>
+            <th scope="col">The oldest member</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= @stats[:count] %></td>
+            <td><%= @stats[:average]%></td>
+            <td><%= @stats[:oldest_member].name + ", " + @stats[:oldest_member].surname + ", age: " + @stats[:age_oldest_member].to_s%></p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-6 offset-5">
+      <%= link_to "Back", tribe_members_path, class: "btn btn-warning btn-custom"%>
+    </div>
+  </div>
+</div>
