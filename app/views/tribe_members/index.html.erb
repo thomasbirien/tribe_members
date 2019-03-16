@@ -10,7 +10,8 @@
     </div>
   </div>
   <div class="row">
-      <div class="col-6">
+    <div class="col-6">
+      <div class="card">
         <h3>Search</h3>
         <p>search by name</p>
           <%= form_tag(tribe_members_path, method: :get) do %>
@@ -35,7 +36,8 @@
             <%= submit_tag("Search", class: "btn btn-outline-primary btn-sm search-btn-margin" )%>
           <% end %>
       </div>
-    <div class="col-6" id="map" style="width: 600px; height: 400px;"></div>
+    </div>
+    <div class="col-6" id="map" style="width: 600px; height: 357px; border-radius: 3px;"></div>
     <script>
       var map = L.map('map').setView([0, 0], 5);
       $.ajax({
