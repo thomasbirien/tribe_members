@@ -20,3 +20,27 @@
   border: 1px solid #8080803d;
   padding: 10px;
 }
+
+.banner {
+  background-color: #ffc107;
+  text-align: center;
+  height: 90px;
+  padding-top: 17px;
+}
+
+.pagination .page-link {
+  color: #ffc107;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.space-top {
+  margin-top: 15px;
+}
+
+.btn-custom {
+  width: 11rem;
+}
