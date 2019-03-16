@@ -8,7 +8,7 @@ class TribeMembersController < ApplicationController
       #   format.html
       #   format.json { render json: @tribe_m }
       # end
-      @tribe_m = TribeMember.all.paginate(:page => params[:page], :per_page => 40)
+      @tribe_m = TribeMember.all.paginate(:page => params[:page], :per_page => 13)
     end
     # @tribe_members = TribeMember.all
     # TribeMember.build_geojson
@@ -24,6 +24,8 @@ class TribeMembersController < ApplicationController
     @tribe_member = TribeMember.new(tribe_member_params)
     @tribe_member.ancestor = ancestor
     if @tribe_member.save
+      TribeMember.add_to_stats(@tribe_member)
+      TribeMember.add_to_geojson(@tribe_member)
       redirect_to tribe_members_path
     else
       render :new
@@ -31,7 +33,7 @@ class TribeMembersController < ApplicationController
   end
 
   def show_stats
-    @stats = TribeMember.generate_stats
+    @stats = TribeMember.data_parse
   end
 
   private

@@ -1,0 +1,7 @@
+<h3>Stats for your tribe</h3>
+
+<p>Total Member: <%= @stats[:count] %></p>
+<p>Average age: <%= @stats[:average]%></p>
+<p>The oldest member: <%= @stats[:oldest_member].name + ", " + @stats[:oldest_member].surname + ", age: " + @stats[:age_oldest_member].to_s%></p>
+
+<%= link_to "Back", tribe_members_path%>

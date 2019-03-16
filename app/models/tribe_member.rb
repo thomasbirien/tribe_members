@@ -15,7 +15,6 @@ class TribeMember < ApplicationRecord
     TribeMember.select{|tm| tm.birthdate == val.to_date}
   }
 
-
   scope :get_ancestor, -> (val) {
     TribeMember.find(val)
   }
@@ -117,7 +116,79 @@ class TribeMember < ApplicationRecord
     geojson
   end
 
-  def generate_stats
+  def self.add_to_geojson(tribe_member)
+    data_hash = JSON.parse(File.read('public/geo.geojson'))
+    hash = {"type"=>"Feature", "geometry"=>{"type"=>"Point", "coordinates"=>[tribe_member.latitude, tribe_member.longitude]}, "properties"=>{"title"=>tribe_member.id}}
+    data_hash["features"] << hash
+
+    geo_to_save = data_hash.to_json
+
+    File.open("public/geo.geojson","w") do |f|
+      f.write(geo_to_save)
+    end
+  end
+
+  def self.data_parse
+    data_hash = JSON.parse(File.read('public/data_for_stat.json'))
+    average_age = data_hash["age"].sum / data_hash["age"].count
+    oldest_member = TribeMember.find(data_hash["older"]["id"])
+    data_to_show = {average: average_age, count: data_hash["count"], oldest_member: oldest_member, age_oldest_member: data_hash["older"]["age"]}
+
+  end
+
+  def self.add_to_stats(tribe_member)
+    data_hash = JSON.parse(File.read('public/data_for_stat.json'))
+    age_year = ((Time.zone.now - tribe_member.birthdate.to_time) / 1.year.seconds).floor
+    data_hash["age"] << age_year
+    age_time = Time.zone.now - tribe_member.birthdate.to_time
+    if data_hash["older"]["age_time"] < age_time
+      data_hash["older"]["age_time"] = age_time
+      data_hash["older"]["age"] = age_year
+      data_hash["older"]["id"] = tribe_member.id
+    end
+
+    data_hash["count"] = data_hash["count"] + 1
+    stat_to_save = data_hash.to_json
+
+    File.open("public/data_for_stat.json","w") do |f|
+      f.write(stat_to_save)
+    end
+
+  end
+
+  def self.generate_stats
+    puts "start"
+    count = 0
+    average = []
+    older = {age: 0, age_time: 0, id: nil}
+    TribeMember.all.each do |tm|
+      puts "#{tm.id}"
+      count += 1
+
+      age_year = ((Time.zone.now - tm.birthdate.to_time) / 1.year.seconds).floor
+      age_time = Time.zone.now - tm.birthdate.to_time
+      # if older[:age] == 0
+      #   older[:age] = age_time
+      # end
+      # next if age_year > 90
+      average << age_year
+      if older[:age_time] < age_time
+        older[:age] = age_year
+        older[:age_time] = age_time
+        older[:id] = tm.id
+      end
+      puts "older: #{older}"
+    end
+    # average_age = average.sum / average.count
+    # puts "average_age: #{average_age}"
+    puts "count: #{count}"
+
+
+    stat_info = {age: average, count: count, older: older}
+    stat_to_save = stat_info.to_json
+    File.open("public/data_for_stat.json","w") do |f|
+      f.write(stat_to_save)
+    end
   end
 
 
