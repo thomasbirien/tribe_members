@@ -5,12 +5,12 @@
 * Rails version: 5.2.2
 
 * gem rajouté:
-  1.gem 'will_paginate', '~> 3.1.0'
-  2.gem 'bootstrap', '~> 4.3.1'
-  3.gem 'jquery-rails'
-  4.gem 'sprockets-rails', :require => 'sprockets/railtie'
-  5.gem 'will_paginate-bootstrap4'
-  6.gem "chartkick"
+1.gem 'will_paginate', '~> 3.1.0'
+2.gem 'bootstrap', '~> 4.3.1'
+3.gem 'jquery-rails'
+4.gem 'sprockets-rails', :require => 'sprockets/railtie'
+5.gem 'will_paginate-bootstrap4'
+6.gem "chartkick"
 
 Difficulté rencontrer:
 
