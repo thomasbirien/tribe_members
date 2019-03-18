@@ -1,7 +1,7 @@
 class TribeMember < ApplicationRecord
   attr_accessor :ancestor_name, :ancestor_surname
 
-  belongs_to :ancestor, class_name: "TribeMember", foreign_key: :ancestor
+  belongs_to :ancestor, class_name: "TribeMember", foreign_key: :ancestor, optional: true
 
   scope :by_name, -> (val) {
     TribeMember.where(name: val)

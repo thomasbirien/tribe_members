@@ -10,22 +10,22 @@
         <%= form_for @tribe_member, url: tribe_members_path(@tribe_member) do |f| %>
           <div class="row">
             <div class="col-6 space-top">
-              <%= f.label :name %>
+              <%= f.label "Name" %>
             </div>
             <div class="col-6 space-top">
-              <%= f.label :surname %>
+              <%= f.label "surname" %>
             </div>
             <div class="col-6">
-              <%= f.text_field :name%>
+              <%= f.text_field :name, required: true%>
             </div>
             <div class="col-6">
-              <%= f.text_field :surname%>
+              <%= f.text_field :surname, required: true%>
             </div>
             <div class="col-9 space-top">
               <%= f.label :birthdate %>
 
 
-              <%= f.date_select :birthdate, start_year: 1500, end_year: Date.current.year, order: [:year, :month, :day] %>
+              <%= f.date_select :birthdate, start_year: 1500, end_year: Date.current.year, order: [:year, :month, :day]%>
             </div>
             <div class="col-6 space-top">
               <%= f.label "Latitude" %>
@@ -34,19 +34,19 @@
               <%= f.label "longitude" %>
             </div>
             <div class="col-6 space-top">
-              <%= f.text_field :latitude %>
+              <%= f.text_field :latitude , required: true%>
             </div>
             <div class="col-5 offset-1 space-top">
-              <%= f.text_field :longitude %>
+              <%= f.text_field :longitude , required: true%>
             </div>
 
             <div class="col-6 space-top">
               <%= f.label :ancestor_name %>
-              <%= f.text_field :ancestor_name %>
+              <%= f.text_field :ancestor_name, required: true %>
             </div>
             <div class="col-5 offset-1 space-top">
               <%= f.label :ancestor_surname %>
-              <%= f.text_field :ancestor_surname %>
+              <%= f.text_field :ancestor_surname, required: true %>
             </div>
             <div class="col-5 space-top">
               <%= f.submit "Create member", class: "btn btn-warning btn-custom"%>

@@ -10,24 +10,24 @@
         <p>search by name</p>
           <%= form_tag(tribe_members_path, method: :get) do %>
             <%= text_field_tag(:name, params[:name], required: true, class: "search-form")%>
-            <%= submit_tag "Search", class: "btn btn-outline-warning btn-sm search-btn-margin"%>
+            <%= submit_tag "Search", id: "search_by_name", class: "btn btn-outline-warning btn-sm search-btn-margin"%>
           <% end %>
 
         <p>search by surname</p>
           <%= form_tag(tribe_members_path, method: :get) do %>
             <%= text_field_tag(:surname, params[:surname], required: true, class: "search-form")%>
-            <%= submit_tag("Search", class: "btn btn-outline-warning btn-sm search-btn-margin")%>
+            <%= submit_tag("Search", id: "search_by_surname", class: "btn btn-outline-warning btn-sm search-btn-margin")%>
           <% end %>
         <p>search by birthdate</p>
           <%= form_tag(tribe_members_path, method: :get) do %>
             <%= date_select("member_birthdate", "birthdate", start_year: 1500, end_year: Date.current.year, order: [:year, :month, :day]) %>
-            <%= submit_tag("Search", class: "btn btn-outline-warning btn-sm search-btn-margin")%>
+            <%= submit_tag("Search", id: "search_by_birthdate", class: "btn btn-outline-warning btn-sm search-btn-margin")%>
           <% end %>
         <p>search by ancestor</p>
           <%= form_tag(tribe_members_path, method: :get) do %>
             <%= text_field_tag(:ancestor_name, params[:ancestor_name], required: true, class: "search-form")%>
             <%= text_field_tag(:ancestor_surname, params[:ancestor_surname], required: true, class: "search-form") %>
-            <%= submit_tag("Search", class: "btn btn-outline-warning btn-sm search-btn-margin" )%>
+            <%= submit_tag("Search", id: "search_by_ancestor_name", class: "btn btn-outline-warning btn-sm search-btn-margin" )%>
           <% end %>
       </div>
     </div>
