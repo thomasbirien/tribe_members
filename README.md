@@ -11,6 +11,7 @@
 - gem 'will_paginate-bootstrap4'
 - gem "chartkick"
 
+
 **Difficulté rencontrer:**
 
 la mise en place de la map n'était pas aisé, ceci est du au nombre de data à incorporer.
