@@ -58,39 +58,6 @@ class TribeMember < ApplicationRecord
     search_result
   end
 
-  def self.build_json
-    json = {"tribe_members" => []}
-
-    TribeMember.all.each do |tm|
-
-      hash = {
-        name: tm.name,
-        surname: tm.surname,
-        birthdate: tm.birthdate,
-        ancestor: {
-          id: nil,
-          name: "",
-          surname: ""
-        }
-      }
-      if tm.ancestor != 0
-        ancestor = TribeMember.find(tm.ancestor)
-        hash[:ancestor][:id] = ancestor.id
-        hash[:ancestor][:name] = ancestor.name
-        hash[:ancestor][:surname] = ancestor.surname
-      end
-
-      json["tribe_members"] << hash
-    end
-
-    json_to_send = json.to_json
-    File.open("public/tribe_members.json","w") do |f|
-      f.write(json_to_send)
-    end
-
-    json
-  end
-
   def self.build_geojson
     geojson = { "type" => "FeatureCollection", "features" => []}
 
@@ -129,30 +96,24 @@ class TribeMember < ApplicationRecord
   end
 
   def self.data_parse
-    data_hash = JSON.parse(File.read('public/data_for_stat.json'))
-    average_age = data_hash["age"].sum / data_hash["age"].count
-    oldest_member = TribeMember.find(data_hash["older"]["id"])
-    data_to_show = {average: average_age, count: data_hash["count"], oldest_member: oldest_member, age_oldest_member: data_hash["older"]["age"]}
-
+    average_age = Stat.last.average.sum / Stat.last.average.count
+    oldest_member = TribeMember.find(Stat.last.older[:id])
+    data_to_show = {average: average_age, count: Stat.last.total_member, oldest_member: oldest_member, age_oldest_member: Stat.last.older[:age]}
   end
 
   def self.add_to_stats(tribe_member)
-    data_hash = JSON.parse(File.read('public/data_for_stat.json'))
+    stat = Stat.last
     age_year = ((Time.zone.now - tribe_member.birthdate.to_time) / 1.year.seconds).floor
-    data_hash["age"] << age_year
+    stat.average << age_year
     age_time = Time.zone.now - tribe_member.birthdate.to_time
-    if data_hash["older"]["age_time"] < age_time
-      data_hash["older"]["age_time"] = age_time
-      data_hash["older"]["age"] = age_year
-      data_hash["older"]["id"] = tribe_member.id
+    if stat.older[:age_time] < age_time
+      stat.older[:age_time] = age_time
+      stat.older[:age] = age_year
+      stat.older[:id] = tribe_member.id
     end
 
-    data_hash["count"] = data_hash["count"] + 1
-    stat_to_save = data_hash.to_json
-
-    File.open("public/data_for_stat.json","w") do |f|
-      f.write(stat_to_save)
-    end
+    stat.total_member = stat.total_member + 1
+    stat.save
 
   end
 
@@ -182,13 +143,14 @@ class TribeMember < ApplicationRecord
     # average_age = average.sum / average.count
     # puts "average_age: #{average_age}"
     puts "count: #{count}"
+    stat = Stat.new(total_member: count, older: older, average: average)
+    stat.save
 
-
-    stat_info = {age: average, count: count, older: older}
-    stat_to_save = stat_info.to_json
-    File.open("public/data_for_stat.json","w") do |f|
-      f.write(stat_to_save)
-    end
+    # stat_info = {age: average, count: count, older: older}
+    # stat_to_save = stat_info.to_json
+    # File.open("public/data_for_stat.json","w") do |f|
+    #   f.write(stat_to_save)
+    # end
   end
 
 

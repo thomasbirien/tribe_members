@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_14_235555) do
+ActiveRecord::Schema.define(version: 2019_03_18_004338) do
+
+  create_table "stats", force: :cascade do |t|
+    t.integer "total_member"
+    t.text "older"
+    t.text "average"
+  end
 
   create_table "tribe_members", force: :cascade do |t|
     t.text "name"
