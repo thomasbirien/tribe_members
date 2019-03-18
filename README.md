@@ -5,19 +5,20 @@
 * Rails version: 5.2.2
 
 * gem rajouté:
+gem 'will_paginate', '~> 3.1.0'
+gem 'bootstrap', '~> 4.3.1'
+gem 'jquery-rails'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'will_paginate-bootstrap4'
+gem "chartkick"
 
-- gem 'will_paginate', '~> 3.1.0'
-- gem 'bootstrap', '~> 4.3.1'
-- gem 'jquery-rails'
-- gem 'sprockets-rails', :require => 'sprockets/railtie'
-- gem 'will_paginate-bootstrap4'
-- gem "chartkick"
+Difficulté rencontrer:
 
-* Difficulté rencontrer:
-- la mise en place de la map n'était pas aisé, ceci est du au nombre de data à incorporer.
+la mise en place de la map n'était pas aisé, ceci est du au nombre de data à incorporer.
 J'ai du rechercher les bon outils pour pouvoir avoir le résultat attendu.
 
-* Note:
+
+Note:
 
 Pour les stats, j'ai tout compte fais pris l'ensemble des données. Car pour l'exercice
 cela est plus intéressant, sinon les stats se seraient faites sur aucuns membre (déjà présent
