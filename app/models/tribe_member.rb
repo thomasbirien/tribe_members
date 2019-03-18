@@ -128,10 +128,7 @@ class TribeMember < ApplicationRecord
 
       age_year = ((Time.zone.now - tm.birthdate.to_time) / 1.year.seconds).floor
       age_time = Time.zone.now - tm.birthdate.to_time
-      # if older[:age] == 0
-      #   older[:age] = age_time
-      # end
-      # next if age_year > 90
+
       average << age_year
       if older[:age_time] < age_time
         older[:age] = age_year
@@ -140,17 +137,11 @@ class TribeMember < ApplicationRecord
       end
       puts "older: #{older}"
     end
-    # average_age = average.sum / average.count
-    # puts "average_age: #{average_age}"
+
     puts "count: #{count}"
     stat = Stat.new(total_member: count, older: older, average: average)
     stat.save
 
-    # stat_info = {age: average, count: count, older: older}
-    # stat_to_save = stat_info.to_json
-    # File.open("public/data_for_stat.json","w") do |f|
-    #   f.write(stat_to_save)
-    # end
   end
 
 
