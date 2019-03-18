@@ -1,20 +1,62 @@
-<h2>Add a new member !</h2>
-<%= form_for @tribe_member, url: tribe_members_path(@tribe_member) do |f| %>
-  <%= f.label :name %>
-  <%= f.text_field :name%>
-  <%= f.label :surname %>
-  <%= f.text_field :surname%>
-  <%= f.label :birthdate %>
-  <%= f.date_select :birthdate, start_year: 1500, end_year: Date.current.year, order: [:year, :month, :day] %>
-  <%= f.label "Latitude / Longitude" %>
-  <%= f.text_field :latitude %>
-  <%= f.text_field :longitude %>
-  <p>ancestor</p>
-  <%= f.label :ancestor_name %>
-  <%= f.text_field :ancestor_name %>
-  <%= f.label :ancestor_surname %>
-  <%= f.text_field :ancestor_surname %>
-  <%= f.submit %>
-<% end %>
+<div class="banner">
+  <h2>Add a new member !</h2>
+</div>
+<br>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-6 offset-3">
+      <div class="card">
+        <%= form_for @tribe_member, url: tribe_members_path(@tribe_member) do |f| %>
+          <div class="row">
+            <div class="col-6 space-top">
+              <%= f.label :name %>
+            </div>
+            <div class="col-6 space-top">
+              <%= f.label :surname %>
+            </div>
+            <div class="col-6">
+              <%= f.text_field :name%>
+            </div>
+            <div class="col-6">
+              <%= f.text_field :surname%>
+            </div>
+            <div class="col-9 space-top">
+              <%= f.label :birthdate %>
 
-<%= link_to "Back", tribe_members_path%>
+
+              <%= f.date_select :birthdate, start_year: 1500, end_year: Date.current.year, order: [:year, :month, :day] %>
+            </div>
+            <div class="col-6 space-top">
+              <%= f.label "Latitude" %>
+            </div>
+            <div class="col-5 offset-1 space-top">
+              <%= f.label "longitude" %>
+            </div>
+            <div class="col-6 space-top">
+              <%= f.text_field :latitude %>
+            </div>
+            <div class="col-5 offset-1 space-top">
+              <%= f.text_field :longitude %>
+            </div>
+
+            <div class="col-6 space-top">
+              <%= f.label :ancestor_name %>
+              <%= f.text_field :ancestor_name %>
+            </div>
+            <div class="col-5 offset-1 space-top">
+              <%= f.label :ancestor_surname %>
+              <%= f.text_field :ancestor_surname %>
+            </div>
+            <div class="col-5 space-top">
+              <%= f.submit "Create member", class: "btn btn-warning btn-custom"%>
+            </div>
+            <div class="col-5 offset-2 space-top">
+              <%= link_to "Back", tribe_members_path, class: "btn btn-warning btn-custom"%>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
