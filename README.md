@@ -3,7 +3,7 @@
 * Ruby version: 2.3.4
 * Rails version: 5.2.2
 
-** gem rajouté: **
+**gem rajouté:**
 - gem 'will_paginate', '~> 3.1.0'
 - gem 'bootstrap', '~> 4.3.1'
 - gem 'jquery-rails'
