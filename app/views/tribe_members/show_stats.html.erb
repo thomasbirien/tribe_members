@@ -24,8 +24,13 @@
         </tbody>
       </table>
     </div>
+    <div class="col-12">
+      <%= line_chart @data_graph, points: false, id: "users-chart", width: "1050px", height: "500px", colors: ["#FFC107", "#FFC107"], xtitle: "Year", ytitle: "Birth"  %>
+    </div>
+
     <div class="col-6 offset-5">
       <%= link_to "Back", tribe_members_path, class: "btn btn-warning btn-custom"%>
     </div>
+
   </div>
 </div>

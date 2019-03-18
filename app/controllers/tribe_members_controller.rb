@@ -27,6 +27,7 @@ class TribeMembersController < ApplicationController
 
   def show_stats
     @stats = TribeMember.data_parse
+    @data_graph = Stat.prepare_hash
   end
 
   private
