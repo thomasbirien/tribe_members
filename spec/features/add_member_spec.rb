@@ -4,6 +4,9 @@ describe "the create process", type: :feature do
   # end
 
   it "test for create member" do
+    date = DateTime.now.to_date - 100.year
+    ancestor = TribeMember.create!(name: "John", surname: "luck", birthdate: date, latitude: 41.808907, longitude: -87.684659)
+
     TribeMember.generate_stats
     visit '/tribe_members/new'
     fill_in('tribe_member_name', with: 'John')
